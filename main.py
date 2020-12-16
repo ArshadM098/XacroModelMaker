@@ -15,18 +15,28 @@ class RobotURDF:
         self.joints = np.empty(self.num_joints, dtype=object)
 
     def create_link(self, name):
-        l = self._tag('link', name)
+        l = self._tag('link')
+        l.setAttribute('name',name)
         self.links = np.append(self.links, l)
         self.num_links = self.links.shape[0]
 
-    def create_joint(self, name):
-        j = self._tag('joint', name)
+    def create_joint(self, name, joint_type, parent_link, child_link):
+        j = self._tag('joint')
+        j.setAttribute('name', name)
+        j.setAttribute('type', joint_type)
+
+        parent = self._tag('parent')
+        parent.setAttribute('link', parent_link)
+        j.appendChild(parent)
+        child = self._tag('child')
+        child.setAttribute('link', child_link)
+        j.appendChild(child)
+
         self.joints = np.append(self.joints, j)
         self.num_joints = self.joints.shape[0]
 
-    def _tag(self, tag_type, name):
+    def _tag(self, tag_type):
         tag = self.root.createElement(tag_type)
-        tag.setAttribute('name', name)
         return tag
 
     def xml_compile(self):
@@ -53,6 +63,7 @@ r1.create_link('RightArm')
 r1.create_link('LeftArm')
 r1.create_link('RightLeg')
 r1.create_link('LeftLeg')
+r1.create_joint('torso','continuous','RightArm','LeftArm')
 r1.xml_compile()
 
 
