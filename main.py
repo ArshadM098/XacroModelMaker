@@ -1,6 +1,5 @@
 from xml.dom import minidom
 import numpy as np
-import os
 
 
 class RobotURDF:
@@ -16,21 +15,29 @@ class RobotURDF:
 
     def create_link(self, name):
         l = self._tag('link')
-        l.setAttribute('name',name)
+        l.setAttribute('name', name)
         self.links = np.append(self.links, l)
         self.num_links = self.links.shape[0]
 
-    def create_joint(self, name, joint_type, parent_link, child_link):
+    def create_joint(self, name, joint_type, parent_link, child_link, xyz=(0, 0, 0), rpy=(0, 0, 0)):
         j = self._tag('joint')
+        # Adding Name and Type Attributes to the joint
         j.setAttribute('name', name)
         j.setAttribute('type', joint_type)
 
+        # Adding Parent/Child Links to the Joint
         parent = self._tag('parent')
         parent.setAttribute('link', parent_link)
         j.appendChild(parent)
         child = self._tag('child')
         child.setAttribute('link', child_link)
         j.appendChild(child)
+
+        # Adding origin values to the joint
+        origin = self._tag('origin')
+        origin.setAttribute('xyz',f'{xyz[0]} {xyz[1]} {xyz[2]}')
+        origin.setAttribute('rpy',f'{rpy[0]} {rpy[1]} {rpy[2]}')
+        j.appendChild(origin)
 
         self.joints = np.append(self.joints, j)
         self.num_joints = self.joints.shape[0]
