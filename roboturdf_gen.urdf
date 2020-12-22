@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<root>
-	<link name="RightArm"/>
-	<link name="LeftArm"/>
-	<link name="RightLeg"/>
-	<link name="LeftLeg"/>
-</root>
